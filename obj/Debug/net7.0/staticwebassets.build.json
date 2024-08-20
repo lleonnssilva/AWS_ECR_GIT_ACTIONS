@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "UjSQi9wlhMOUJRNdZmoBTSSc4w60MZoQsz9aY3qtpYg=",
+  "Source": "AWS_ECR_GIT_ACTIONS",
+  "BasePath": "_content/AWS_ECR_GIT_ACTIONS",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

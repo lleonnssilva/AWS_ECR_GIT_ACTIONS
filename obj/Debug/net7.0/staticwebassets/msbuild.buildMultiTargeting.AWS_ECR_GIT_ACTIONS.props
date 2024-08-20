@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\AWS_ECR_GIT_ACTIONS.props" />
+</Project>
