@@ -1,4 +1,4 @@
-name: Build and Push Docker image to AWS ECR
+name: Build, Push Docker image, and Deploy to ECS
 
 on:
   push:
@@ -47,3 +47,12 @@ jobs:
     - name: Push Docker image
       run: |
         docker push 211125447912.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/meu-dotnet-app:latest
+
+    - name: Deploy to ECS
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: ${{ secrets.ECS_TASK_DEFINITION }}
+        service: ${{ secrets.ECS_SERVICE }}
+        cluster: ${{ secrets.ECS_CLUSTER }}
+        image: 211125447912.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/meu-dotnet-app:latest
+        region: ${{ secrets.AWS_REGION }}
