@@ -3,7 +3,7 @@ name: Build, Push Docker image, and Deploy to ECS
 on:
   push:
     branches:
-      - main  # Aciona o workflow em pushes para o branch main
+      - main  # Aciona o workflow em pushes para o branch main 
 
 jobs:
   build:
