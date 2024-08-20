@@ -1,0 +1,49 @@
+name: Build and Push Docker image to AWS ECR
+
+on:
+  push:
+    branches:
+      - main  # Aciona o workflow em pushes para o branch main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v3
+
+    - name: Set up .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '6.x'
+
+    - name: Install Docker
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y docker.io
+
+    - name: Build .NET project
+      run: |
+        dotnet restore
+        dotnet build --configuration Release
+
+    - name: Publish .NET project
+      run: |
+        dotnet publish --configuration Release --output ./publish
+
+    - name: Build Docker image
+      run: |
+        docker build -t meu-dotnet-app:latest .
+
+    - name: Log in to AWS ECR
+      run: |
+        aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin 211125447912.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+
+    - name: Tag Docker image
+      run: |
+        docker tag meu-dotnet-app:latest 211125447912.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/meu-dotnet-app:latest
+
+    - name: Push Docker image
+      run: |
+        docker push 211125447912.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/meu-dotnet-app:latest
