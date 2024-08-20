@@ -1,9 +1,9 @@
-name: Build, Push Docker image, and Deploy to ECS
+name: Build and Deploy Docker image to AWS ECS
 
 on:
   push:
     branches:
-      - main  # Aciona o workflow em pushes para o branch main 
+      - main
 
 jobs:
   build:
@@ -13,15 +13,26 @@ jobs:
     - name: Check out code
       uses: actions/checkout@v3
 
-    - name: Set up .NET
+    - name: Set up .NET 7
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: '7.x'
 
+    - name: Update and fix packages
+      run: |
+        sudo apt-get update
+        sudo apt-get upgrade -y
+        sudo apt-get dist-upgrade -y
+        sudo apt-get -f install
+
     - name: Install Docker
       run: |
         sudo apt-get update
-        sudo apt-get install -y docker.io
+        sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+        sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+        sudo apt-get update
+        sudo apt-get install -y docker-ce
 
     - name: Build .NET project
       run: |
